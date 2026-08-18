@@ -650,4 +650,3 @@ footer.site-footer{ display:none; }
 @media (min-width:1400px){
   .product-grid{ gap:32px; }
 }
-.hero{ margin:24px 48px 40px; min-height:480px; }
