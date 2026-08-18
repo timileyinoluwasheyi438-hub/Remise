@@ -7,9 +7,10 @@
   <title>{% block title %}Remise — Shop Women's & Men's Fashion{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'shorp/css/style.css' %}">
 
-  {% block extra_head %}{% endblock %}
+  {% block extra_head %}{% load static %}{% endblock %}
 </head>
 <body>
+  {% load static %}
 <div class="page">
 
   <!-- ===== DESKTOP TOP NAV ===== -->
