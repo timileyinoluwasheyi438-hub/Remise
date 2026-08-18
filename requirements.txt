@@ -3,3 +3,10 @@ Pillow>=10.0
 requests>=2.31
 django-cloudinary-storage
 cloudinary
+psycopg2-binary
+dj-database-url
+gunicorn
+whitenoise
+python-dotenv
+django-cloudinary-storage
+cloudinary
