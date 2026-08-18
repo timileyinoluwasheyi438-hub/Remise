@@ -18,23 +18,21 @@ SIZE_CHOICES = (
     ('XL', 'XL'),
 )
 
-
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     icon = models.CharField(
-        max_length=10, blank=True,
-        help_text='A single emoji used as the category icon on the home page, e.g. 👗'
-    )
+    max_length=10, blank=True,
+    help_text='Optional emoji fallback if no image is uploaded, e.g. 👗')
+    image = models.ImageField(upload_to='categories/', blank=True, null=True)
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
-        verbose_name_plural = 'Categories'
-        ordering = ['order', 'name']
+       verbose_name_plural = 'Categories'
+       ordering = ['order', 'name']
 
     def __str__(self):
-        return self.name
-
+       return self.name
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
