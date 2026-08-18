@@ -1,0 +1,96 @@
+{% extends 'shorp/base.html' %}
+
+{% block title %}{{ product.name }} — Remise{% endblock %}
+
+{% block content %}
+
+  <div class="pd-header">
+    <a href="javascript:history.back()" class="back-btn">&#8592;</a>
+    <h1>Product Details</h1>
+    <div class="actions">
+      <form action="{% url 'shorp:toggle_wishlist' product.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ product.get_absolute_url }}">
+        <button type="submit" class="icon-btn {% if in_wishlist %}dark{% endif %}">&#9825;</button>
+      </form>
+      <button class="icon-btn" onclick="navigator.share ? navigator.share({title:'{{ product.name }}', url:location.href}) : alert('Copy this link to share: ' + location.href)">&#8663;</button>
+    </div>
+  </div>
+
+  <div class="pd-wrap">
+
+    <div class="pd-gallery-wrap">
+      <div class="pd-gallery">
+        <img id="pd-main-image"
+             src="{% if product.display_image %}{{ product.display_image }}{% else %}https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=900&q=80{% endif %}"
+             alt="{{ product.name }}">
+      </div>
+      <div class="pd-thumbs">
+        <img src="{{ product.display_image|default:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=300&q=80' }}"
+             class="pd-thumb active" onclick="document.getElementById('pd-main-image').src=this.src;document.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active'));this.classList.add('active');">
+        {% for img in product.gallery.all %}
+          <img src="{{ img.display_image }}" class="pd-thumb"
+               onclick="document.getElementById('pd-main-image').src=this.src;document.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active'));this.classList.add('active');">
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="pd-body">
+
+      <div class="pd-top-row">
+        <span class="pd-season">New Season</span>
+        <span class="pd-rating">&#9733; {{ product.rating }} ({{ product.review_count }} reviews)</span>
+      </div>
+
+      <div class="pd-title-row">
+        <h2>{{ product.name }}</h2>
+        <div class="pd-prices">
+          {% if product.old_price %}<span class="old">${{ product.old_price|floatformat:2 }}</span>{% endif %}
+          <span class="now">${{ product.price|floatformat:2 }}</span>
+        </div>
+      </div>
+
+      <form id="add-to-bag-form" action="{% url 'shorp:add_to_cart' product.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ product.get_absolute_url }}">
+
+        {% if product.sizes.exists %}
+        <div class="pd-sizes">
+          <h3>Select Size</h3>
+          <div class="size-options">
+            {% for s in product.sizes.all %}
+              <input type="radio" name="size" id="size-{{ s.size }}" value="{{ s.size }}" {% if s.stock == 0 %}disabled{% endif %} {% if forloop.first %}checked{% endif %}>
+              <label for="size-{{ s.size }}">{{ s.size }}</label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="pd-desc">
+          <h3>Description</h3>
+          <p>{{ product.description|default:"Check out this comfy piece from Remise. Made with care, with some cool functional details and a sleek look — perfect for anyone who loves style and comfort." }}</p>
+        </div>
+
+        <div class="pd-sticky-bar">
+          <button type="button" class="btn-outline">{% if product.gender == 'men' %}&#9794;{% else %}&#9792;{% endif %}</button>
+          <button type="submit" class="btn-primary">&#128717; Add to Bag</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  {% if related %}
+  <div class="related-strip">
+    <div class="section-head">
+      <h2>You may also like</h2>
+    </div>
+    <div class="product-grid">
+      {% for p in related %}
+        {% include 'shorp/_product_card.html' with product=p %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+{% endblock %}

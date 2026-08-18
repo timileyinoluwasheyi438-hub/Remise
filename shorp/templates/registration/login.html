@@ -1,0 +1,28 @@
+{% extends 'shorp/base.html' %}
+
+{% block title %}Log In — Remise{% endblock %}
+
+{% block content %}
+  <div class="list-header">
+    <a href="{% url 'shorp:home' %}" class="back-btn">&#8592;</a>
+    <h1>Log In</h1>
+    <span></span>
+  </div>
+
+  <div class="form-page">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn-primary" style="width:100%;margin-top:10px;">Log In</button>
+    </form>
+    <p style="margin-top:18px;font-size:13.5px;color:#5c5c5c;">
+      New to Remise? <a href="{% url 'shorp:signup' %}" style="font-weight:700;color:#0d0d0d;">Create an account</a>
+    </p>
+  </div>
+{% endblock %}

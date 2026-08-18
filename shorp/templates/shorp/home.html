@@ -1,0 +1,75 @@
+{% extends 'shorp/base.html' %}
+{% load static %}
+
+{% block title %}Remise — Shop Women's & Men's Fashion{% endblock %}
+{% block tab_home %}active{% endblock %}
+
+{% block content %}
+
+  <!-- MOBILE HEADER -->
+  <div class="mobile-header">
+    <a href="{% url 'shorp:home' %}" class="logo">Remise</a>
+    <div class="actions">
+      <a href="{% url 'shorp:my_orders' %}" class="icon-btn">&#9825;</a>
+      <a href="{% url 'shorp:cart_detail' %}" class="icon-btn">&#128717;</a>
+    </div>
+  </div>
+
+  <form class="search-bar" action="{% url 'shorp:product_list' %}" method="get">
+    <span>&#128269;</span>
+    <input type="text" name="q" placeholder="Search for brands, styles...">
+    <span class="filter-dot">&#9881;</span>
+  </form>
+
+  <div class="gender-toggle gender-toggle-mobile">
+    <a href="?gender=women" class="{% if active_gender == 'women' %}active{% endif %}">Women</a>
+    <a href="?gender=men" class="{% if active_gender == 'men' %}active{% endif %}">Men</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-copy">
+      <span class="hero-tag">New in</span>
+      <h1>Spring Essentials</h1>
+      <p>Discover new styles to embrace this exciting season!</p>
+      <a href="{% url 'shorp:product_list' %}" class="hero-cta">Shop Now</a>
+    </div>
+    {% if new_in %}
+      <img class="hero-image" src="{{ new_in.display_image }}" alt="{{ new_in.name }}">
+    {% else %}
+      <img class="hero-image" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80" alt="Spring essentials">
+    {% endif %}
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Category</h2>
+      <a href="{% url 'shorp:product_list' %}">See all</a>
+    </div>
+    <div class="category-grid">
+      {% for cat in categories %}
+        <a class="cat" href="{% url 'shorp:product_list_by_category' cat.slug %}">
+          <span class="cat-circle c{{ forloop.counter0|add:1 }}">{{ cat.icon }}</span>
+          <span>{{ cat.name }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- TRENDING -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Trending Now</h2>
+      <a href="{% url 'shorp:product_list' %}">See all</a>
+    </div>
+    <div class="product-grid">
+      {% for product in trending %}
+        {% include 'shorp/_product_card.html' with product=product %}
+      {% empty %}
+        <p style="color:#9a9a9a;font-size:13px;">No products yet — add some from the Django admin.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'shorp/base.html' %}
+
+{% block title %}Create Account — Remise{% endblock %}
+
+{% block content %}
+  <div class="list-header">
+    <a href="{% url 'shorp:home' %}" class="back-btn">&#8592;</a>
+    <h1>Create Account</h1>
+    <span></span>
+  </div>
+
+  <div class="form-page">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<p style="font-size:11.5px;color:#9a9a9a;margin:4px 0 0;">{{ field.help_text|safe }}</p>{% endif %}
+          {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn-primary" style="width:100%;margin-top:10px;">Sign Up</button>
+    </form>
+    <p style="margin-top:18px;font-size:13.5px;color:#5c5c5c;">
+      Already have an account? <a href="{% url 'shorp:login' %}" style="font-weight:700;color:#0d0d0d;">Log in</a>
+    </p>
+  </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'shorp/base.html' %}
+
+{% block title %}Checkout — Remise{% endblock %}
+
+{% block content %}
+  <div class="list-header">
+    <a href="{% url 'shorp:cart_detail' %}" class="back-btn">&#8592;</a>
+    <h1>Checkout</h1>
+    <span></span>
+  </div>
+
+  <div class="form-page">
+
+    <div class="order-summary-box">
+      {% for line in cart %}
+        <div class="line">
+          <span>{{ line.product.name }} {% if line.size %}({{ line.size }}){% endif %} &times; {{ line.quantity }}</span>
+          <span>${{ line.total_price|floatformat:2 }}</span>
+        </div>
+      {% endfor %}
+      <div class="line" style="font-weight:800;border-top:1px solid #e3e3e3;margin-top:8px;padding-top:10px;">
+        <span>Total</span>
+        <span>${{ cart.get_total|floatformat:2 }}</span>
+      </div>
+    </div>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="btn-primary" style="width:100%;margin-top:10px;">Continue to Payment</button>
+    </form>
+  </div>
+{% endblock %}

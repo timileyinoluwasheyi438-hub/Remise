@@ -1,0 +1,65 @@
+{% extends 'shorp/base.html' %}
+
+{% block title %}Your Bag — Remise{% endblock %}
+{% block tab_bag %}active{% endblock %}
+
+{% block content %}
+
+  <div class="list-header">
+    <a href="{% url 'shorp:home' %}" class="back-btn">&#8592;</a>
+    <h1>Your Bag</h1>
+    <span></span>
+  </div>
+
+  {% if cart|length == 0 %}
+    <div class="empty-state">
+      <p>Your bag is empty.</p>
+      <a href="{% url 'shorp:product_list' %}" class="btn-secondary" style="margin-top:14px;display:inline-flex;">Start Shopping</a>
+    </div>
+  {% else %}
+
+  <div class="cart-wrap">
+    <div class="cart-list">
+      {% for line in cart %}
+        <div class="cart-item">
+          {% if line.product.display_image %}
+            <img src="{{ line.product.display_image }}" alt="{{ line.product.name }}">
+          {% else %}
+            <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&q=80" alt="{{ line.product.name }}">
+          {% endif %}
+          <div class="info">
+            <p class="name">{{ line.product.name }}</p>
+            <span class="size">{% if line.size %}Size: {{ line.size }}{% endif %}</span>
+            <div class="row">
+              <form action="{% url 'shorp:update_cart' line.key %}" method="post" class="qty-stepper" onchange="this.requestSubmit()">
+                {% csrf_token %}
+                <button type="submit" name="quantity" value="{{ line.quantity|add:'-1' }}">&minus;</button>
+                <input type="text" value="{{ line.quantity }}" readonly>
+                <button type="submit" name="quantity" value="{{ line.quantity|add:'1' }}">&#43;</button>
+              </form>
+              <span class="price">${{ line.total_price|floatformat:2 }}</span>
+            </div>
+            <form action="{% url 'shorp:remove_from_cart' line.key %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="remove-link">Remove</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="cart-summary">
+      <div class="row"><span>Subtotal</span><span>${{ cart.get_total|floatformat:2 }}</span></div>
+      <div class="row"><span>Delivery</span><span>Free</span></div>
+      <div class="row total"><span>Total</span><span>${{ cart.get_total|floatformat:2 }}</span></div>
+      <a href="{% url 'shorp:checkout' %}" class="btn-primary checkout-cta" style="text-decoration:none;">Checkout</a>
+    </div>
+  </div>
+
+  <div class="cart-actions">
+    <a href="{% url 'shorp:checkout' %}" class="btn-primary" style="text-decoration:none;">Checkout &middot; ${{ cart.get_total|floatformat:2 }}</a>
+  </div>
+
+  {% endif %}
+
+{% endblock %}

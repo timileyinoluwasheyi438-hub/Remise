@@ -1,0 +1,12 @@
+{% extends 'shorp/base.html' %}
+
+{% block title %}Order Confirmed — Remise{% endblock %}
+
+{% block content %}
+  <div class="success-box">
+    <div class="check">&#10003;</div>
+    <h1>Order Confirmed!</h1>
+    <p>Thanks {{ order.full_name }}, your order #{{ order.id }} has been placed and is being prepared for delivery.</p>
+    <a href="{% url 'shorp:product_list' %}" class="btn-primary" style="display:inline-flex;text-decoration:none;padding:0 32px;">Continue Shopping</a>
+  </div>
+{% endblock %}

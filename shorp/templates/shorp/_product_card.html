@@ -1,0 +1,29 @@
+{% load static %}
+<div class="product-card">
+  <a href="{{ product.get_absolute_url }}" class="thumb-wrap">
+    {% if product.is_new %}
+      <span class="badge">New in</span>
+    {% elif product.is_bestseller %}
+      <span class="badge">Best Seller</span>
+    {% endif %}
+    {% if product.display_image %}
+      <img src="{{ product.display_image }}" alt="{{ product.name }}">
+    {% else %}
+      <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&q=80" alt="{{ product.name }}">
+    {% endif %}
+  </a>
+  <form action="{% url 'shorp:toggle_wishlist' product.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <button type="submit" class="wish-btn" aria-label="Save to wishlist">&#9825;</button>
+  </form>
+  <a href="{{ product.get_absolute_url }}" class="meta">
+    <p class="name">{{ product.name }}</p>
+    <div class="price-row">
+      <span class="price">${{ product.price|floatformat:2 }}</span>
+      {% if product.old_price %}
+        <span class="old-price">${{ product.old_price|floatformat:2 }}</span>
+      {% endif %}
+    </div>
+  </a>
+</div>

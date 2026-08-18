@@ -1,0 +1,50 @@
+{% extends 'shorp/base.html' %}
+
+{% block title %}Payment — Remise{% endblock %}
+
+{% block content %}
+  <div class="list-header">
+    <a href="{% url 'shorp:checkout' %}" class="back-btn">&#8592;</a>
+    <h1>Payment</h1>
+    <span></span>
+  </div>
+
+  <div class="form-page">
+    <div class="order-summary-box">
+      <div class="line"><span>Order</span><span>#{{ order.id }}</span></div>
+      <div class="line"><span>Name</span><span>{{ order.full_name }}</span></div>
+      <div class="line"><span>Delivery to</span><span>{{ order.address }}, {{ order.city }}</span></div>
+      <div class="line" style="font-weight:800;border-top:1px solid #e3e3e3;margin-top:8px;padding-top:10px;">
+        <span>Amount</span><span>${{ order.total|floatformat:2 }}</span>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:#5c5c5c;">
+      Payment is processed securely by Paystack. You'll be asked for your card
+      or bank details in a secure popup — Remise never sees your card number.
+    </p>
+
+    <button id="pay-btn" class="btn-primary" style="width:100%;">Pay ${{ order.total|floatformat:2 }}</button>
+  </div>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script>
+    document.getElementById('pay-btn').addEventListener('click', function (e) {
+      e.preventDefault();
+      var handler = PaystackPop.setup({
+        key: '{{ paystack_public_key }}',
+        email: '{{ order.email }}',
+        amount: {{ amount_kobo }},
+        ref: '{{ order.paystack_reference }}',
+        currency: 'NGN',
+        callback: function (response) {
+          window.location.href = '{{ callback_url }}?reference=' + response.reference;
+        },
+        onClose: function () {
+          console.log('Payment window closed');
+        }
+      });
+      handler.openIframe();
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Remise — Shop Women's & Men's Fashion{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'shorp/css/style.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="page">
+
+  <!-- ===== DESKTOP TOP NAV ===== -->
+  <header class="topbar">
+    <a href="{% url 'shorp:home' %}" class="logo">Remise</a>
+    <nav>
+      <a href="{% url 'shorp:home' %}" class="{% block nav_home %}{% endblock %}">Home</a>
+      <a href="{% url 'shorp:product_list_by_category' 'dresses' %}">Dresses</a>
+      <a href="{% url 'shorp:product_list_by_category' 'tops' %}">Tops</a>
+      <a href="{% url 'shorp:product_list_by_category' 'shoes' %}">Shoes</a>
+      <a href="{% url 'shorp:product_list_by_category' 'accessories' %}">Accessories</a>
+      <a href="{% url 'shorp:about' %}" class="{% block nav_about %}{% endblock %}">About</a>
+      <a href="{% url 'shorp:contact' %}" class="{% block nav_contact %}{% endblock %}">Contact</a>
+    </nav>
+    <form class="search-bar" action="{% url 'shorp:product_list' %}" method="get">
+      <span>&#128269;</span>
+      <input type="text" name="q" placeholder="Search for brands, styles...">
+    </form>
+    <div class="actions">
+      {% if user.is_authenticated %}
+        <a href="{% url 'shorp:my_orders' %}" class="nav-text-link" title="My orders">My Orders</a>
+        <a href="{% url 'shorp:logout' %}" class="nav-text-link">Log Out</a>
+      {% else %}
+        <a href="{% url 'shorp:login' %}" class="nav-text-link">Log In</a>
+      {% endif %}
+      <a href="{% url 'shorp:cart_detail' %}" class="icon-btn dark" title="Bag">
+        &#128717;
+        {% if cart_count %}<span class="cart-count">{{ cart_count }}</span>{% endif %}
+      </a>
+    </div>
+  </header>
+
+  {% if messages %}
+    <ul class="messages container">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer"></footer>
+
+  <!-- ===== MOBILE BOTTOM TAB BAR ===== -->
+  <nav class="tabbar">
+    <a href="{% url 'shorp:home' %}" class="{% block tab_home %}{% endblock %}">&#8962;</a>
+    <a href="{% url 'shorp:my_orders' %}" class="{% block tab_wish %}{% endblock %}">&#9825;</a>
+    <a href="{% url 'shorp:cart_detail' %}" class="{% block tab_bag %}{% endblock %}">
+      &#128717;
+      {% if cart_count %}<span class="cart-count">{{ cart_count }}</span>{% endif %}
+    </a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'shorp:logout' %}">&#128100;</a>
+    {% else %}
+      <a href="{% url 'shorp:login' %}">&#128100;</a>
+    {% endif %}
+  </nav>
+
+</div>
+</body>
+</html>

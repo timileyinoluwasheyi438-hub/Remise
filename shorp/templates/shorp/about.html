@@ -1,0 +1,24 @@
+{% extends 'shorp/base.html' %}
+{% block title %}About — Remise{% endblock %}
+{% block nav_about %}active{% endblock %}
+
+{% block content %}
+  <div class="list-header">
+    <a href="{% url 'shorp:home' %}" class="back-btn">&#8592;</a>
+    <h1>About Remise</h1>
+    <span></span>
+  </div>
+
+  <div class="form-page">
+    <p style="font-size:14.5px;line-height:1.7;color:#5c5c5c;">
+      Remise is a fashion destination for women and men who want clean,
+      considered pieces without the noise. We work with a small set of
+      makers to bring you well-cut essentials — dresses, tops, shoes and
+      accessories — at honest prices.
+    </p>
+    <p style="font-size:14.5px;line-height:1.7;color:#5c5c5c;margin-top:14px;">
+      This shorpfront was built as a final year software project, covering
+      product browsing, a shopping bag, checkout, and secure payment.
+    </p>
+  </div>
+{% endblock %}

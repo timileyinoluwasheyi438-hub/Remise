@@ -1,0 +1,40 @@
+{% extends 'shorp/base.html' %}
+
+{% block title %}{% if category %}{{ category.name }}{% else %}Shop{% endif %} — Remise{% endblock %}
+
+{% block content %}
+
+  <div class="list-header">
+    <a href="{% url 'shorp:home' %}" class="back-btn">&#8592;</a>
+    <h1>{% if category %}{{ category.name }}{% else %}Shop All{% endif %}</h1>
+    <div class="actions" style="display:flex;gap:8px;">
+      <a href="{% url 'shorp:cart_detail' %}" class="icon-btn">&#9825;</a>
+      <a href="{% url 'shorp:cart_detail' %}" class="icon-btn dark">&#128717;</a>
+    </div>
+  </div>
+
+  <form class="search-bar" action="{% url 'shorp:product_list' %}" method="get">
+    <span>&#128269;</span>
+    <input type="text" name="q" value="{{ query }}" placeholder="Search for brands, styles...">
+    <span class="filter-dot">&#9881;</span>
+  </form>
+
+  <div class="filter-chips">
+    <a href="{% url 'shorp:product_list' %}?gender={{ active_gender }}" class="{% if not category %}active{% endif %}">All</a>
+    {% for cat in categories %}
+      <a href="{% url 'shorp:product_list_by_category' cat.slug %}?gender={{ active_gender }}"
+         class="{% if category.slug == cat.slug %}active{% endif %}">{{ cat.name }}</a>
+    {% endfor %}
+  </div>
+
+  <section class="section">
+    <div class="product-grid">
+      {% for product in products %}
+        {% include 'shorp/_product_card.html' with product=product %}
+      {% empty %}
+        <p class="empty-state">No products found. Try a different category or search.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+{% endblock %}
