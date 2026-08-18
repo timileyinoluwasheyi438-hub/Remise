@@ -51,7 +51,8 @@
   {% endif %}
 
   <main>
-    {% block content %}{% endblock %}
+    {% block content %} {% load static %}
+    {% endblock %}
   </main>
 
   <footer class="site-footer"></footer>
